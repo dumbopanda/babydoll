@@ -1,0 +1,42 @@
+\chapter{Conclusion and Future Work}
+
+%%\pagenumbering{arabic}\hspace{3mm}
+\label{ch:conclusion}
+
+This report has detailed a comprehensive methodology for the parameterization of a second-order Equivalent Circuit Model (ECM) for a commercial Li-ion battery. The primary objective was to move from raw experimental test data to a fully functional and validated battery model within the Matlab Simulink environment.
+
+\section{Summary of Work}
+
+The project commenced with the identification of a suitable high-quality dataset, which was a complete Hybrid Pulse Power Characterization (HPPC) test for a BAK N18650CL-29 cell. This data provided the necessary voltage and current responses over a wide range of operating temperatures and states-of-charge (SOC).
+
+A systematic workflow was then developed in Matlab and Simulink. A second-order Thevenin model was constructed in Simulink to serve as the structural basis for the battery. Using the Simulink Parameter Estimation toolbox, the model's voltage response was iteratively fitted to the experimental HPPC pulse data at each discrete SOC and temperature point.
+
+This process successfully yielded the values for the five key ECM parameters: the ohmic resistance ($R_o$), two polarization resistances ($R_1$, $R_2$), and two polarization capacitances ($C_1$, $C_2$). The final output of this work is a set of comprehensive 2D lookup tables that accurately describe these parameters as a function of SOC and temperature.
+
+\section{Key Conclusions}
+
+The results presented in Chapter 4 led to several important conclusions:
+
+\begin{itemize}
+    \item \textbf{Parameters are Highly Non-Linear:} The most significant finding is the highly non-linear and complex dependency of all five ECM parameters on both SOC and temperature. The erratic, "spiky" behavior seen in the parameter plots confirms that simple mathematical equations (e.g., polynomial fits) would be insufficient to accurately model the cell's behavior.
+
+    \item \textbf{Physical Trends are Validated:} The extraction process captured known physical phenomena. For instance, the sharp increase in both polarization resistances ($R_1$ and $R_2$) at low states-of-charge (e.g., below 20\% SOC) correctly models the increased difficulty of lithium-ion intercalation as the electrode material becomes depleted.
+
+    \item \textbf{Lookup Tables are the Correct Approach:} The findings validate the chosen methodology. The use of 2D lookup tables, populated with the extracted data, is the most robust and high-fidelity method for creating an ECM in Simulink that can accurately replicate the cell's performance across its entire operating map.
+\end{itemize}
+
+\section{Future Work}
+The ECM developed in this report is the foundation upon which the full Hybrid Battery Thermal Management System for an electric two-wheeler can now be built. The following practical steps are recommended to achieve this goal:
+
+\begin{itemize}
+
+    \item \textbf{Develop a Lumped-Parameter Thermal Model:} The immediate next step is to create a thermal model of the battery cell (or a small pack) in Simulink. This model would take the heat generation data from the ECM as its input. Its output would be the cell's core and surface temperature, which is the key variable to be controlled.
+
+    \item \textbf{Model Passive and Active Cooling Components:} To create a "hybrid" system, models for both a passive cooling element (e.g., Phase Change Material - PCM) and a simple active cooling element (e.g., a forced-air fan) should be developed and coupled with the battery thermal model. This would allow for a study of their combined effectiveness.
+
+    \item \textbf{Design a Basic Control Strategy:} A simple, rule-based control logic (e.g., If Temperature "\textgreater{} 45$^{\circ }$C, THEN turn on fan") can be implemented in Simulink. This would complete the hybrid BTMS model by allowing the system to actively respond to high temperatures.
+
+    \item \textbf{Simulate with Two-Wheeler Drive Cycles:} Finally, the complete hybrid BTMS model should be tested against realistic drive cycles for an electric two-wheeler (e.g., city start-stop cycles). This would validate whether the designed system can maintain the battery temperature within the safe operating range under real-world conditions, and would allow for analysis of the energy consumed by the fan.
+\end{itemize}
+
+In summary, this project has successfully established the essential electrical model. The recommended future work will leverage this model to design, integrate, and test the thermal components, completing the original vision of a functional hybrid thermal management system.

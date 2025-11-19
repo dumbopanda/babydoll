@@ -1,0 +1,26 @@
+\chapter{Research Objectives}
+%\pagenumbering{arabic}\hspace{3mm}
+\label{ch:objectives}
+The success of any high-quality \textbf{Battery Management System (BMS)} or thermal management system relies entirely on having an accurate mathematical representation of the battery itself. For our project, we chose the \textbf{Equivalent Circuit Model (ECM)} because it strikes a good balance between mimicking the battery's physics and being fast enough for real-time applications. However, the core challenge in using the ECM is finding its accurate internal values like the ohmic resistance and polarization components—which aren't static. These values change in a complex, non-linear way depending on how full the battery is\textbf{ (State-of-Charge, or SOC)} and its current temperature. Our main goal was to develop a dependable method for extracting these exact ECM parameters for a specific Li-ion cell. We performed this entire parameter identification and model validation process using standard engineering tools, Matlab and Simulink, based on experimental data we had gathered from a \textbf{Hybrid Pulse Power Characterization (HPPC) test.}
+
+\section{Central Project Goal}
+
+The main intention of this endeavor was to ascertain the values for the components of a second-order Equivalent Circuit Model (ECM), drawing solely upon the available Hybrid Pulse Power Characterization (HPPC) experimental data using the integrated environment of Matlab Simulink.
+
+This overarching objective was subdivided into the following critical stages:
+
+\begin{itemize}
+ 	\item \textbf{To engineer a second-order ECM (specifically, a Thevenin topology) within the Matlab Simulink platform.} This digital construct acts as the surrogate for the actual battery cell, with its functional characteristics predicated on the component values we intend to identify\cite{ChoThermalECM}.
+
+ 	\item \textbf{To establish an iterative parameter estimation routine utilizing Simulink's capabilities.} This phase necessitated employing Simulink's native optimization or estimation utilities (such as the Parameter Estimator or tools from the Optimization Toolbox) to thoroughly scrutinize the transient voltage response recorded during the HPPC testing.
+
+ 	\item \textbf{To rigorously define the ECM constituent values across all examined operational domains.} The identification procedure was systematically reapplied to the HPPC data to isolate the unique numerical values for the open-circuit voltage (OCV), the ohmic resistance ($R_o$), and the twin polarization RC networks ($R_1, C_1, R_2, C_2$) corresponding to every distinct State-of-Charge (SOC) and thermal level\cite{LiawModeling}.
+
+ 	\item \textbf{To synthesize a complete and comprehensive parameter reservoir for the full battery model.} The resultant extracted values were methodically arranged into a system of 2D lookup tables, mathematically defining the ECM parameters as dependent variables of both SOC and temperature.
+
+ 	\item \textbf{To verify the predictive precision of the resulting parameterized model.} The completed ECM, now infused with the derived lookup tables, was subjected to a comparison simulation against the original HPPC data to quantify its representational accuracy and ensure its capacity to reliably replicate the cell's actual dynamic behavior.
+\end{itemize}
+
+\section{Boundaries of This Investigation}
+
+The scope of this project is confined strictly to the post-experimental data processing and analytical interpretation of a pre-existing HPPC dataset. It does not encompass the execution of any new laboratory or physical experiments. The fundamental achievement here is the development of a structured, replicable sequence of operations within Matlab/Simulink designed to yield a comprehensive set of second-order ECM component values. The ultimate outcome is this authenticated collection of parameter lookup tables, which is intended to serve as a high-fidelity input for subsequent battery thermal management simulations.

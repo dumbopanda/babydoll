@@ -1,0 +1,128 @@
+\chapter{Results and Discussions}
+
+%\pagenumbering{arabic}\hspace{3mm}
+
+\label{ch:results}
+
+
+
+The methodology, which explained in the previous chapter, was used on a HPPC data set to extract the parameters for a second-order ECM. The results of the extraction process will be discussed here along with the designated parameters and major trends. This will also help create the final Simulink model. 
+
+
+
+\section{Data Source and Extracted Parameters}
+
+
+
+The experimental HPPC test data used for this project was taken from a MathWorks example as shown in Figure 4.1. The BAK N18650CL-29 cell is a lithium-ion cell of type 18650. The tests took place at five uniform ambient temperatures, specifically 0$^{\circ}$C, 10$^{\circ}$C, 25$^{\circ}$C, 35$^{\circ}$C and 45$^{\circ}$C, which enabled temperature dependent parameterization.
+
+
+
+% --- FIGURE PLACEHOLDER 1 ---
+
+% Replaced \includegraphics which was causing a "File not found" error.
+
+% The LaTeX environment cannot access local files.
+
+\begin{figure}[htbp] 
+\centering \includegraphics[
+                    width=0.9\textwidth,
+                    height=0.4\textheight,
+                    keepaspectratio
+                    ]{figures/Data.png} \caption{Source and description of the HPPC test data used for parameter extraction (Image courtesy of MathWorks, Inc.)} \label{fig:4.1} 
+\end{figure}
+
+
+
+The methodology for parameter extraction was implemented at each temperature and SOC point present in the dataset. The ohmic resistance (R0) of the second-order ECM, two polarization resistances (R1, R2), and two polarization capacitances (C1, C2) parameters are plotted as a function of the State of Charge (SOC).
+
+
+
+% --- FIGURE PLACEHOLDER 2 (SUBFIGURES) ---
+
+\begin{figure}[htbp]
+    \centering
+    % Fits within 90% width AND 40% height, whichever is smaller
+    \includegraphics[width=0.9\textwidth, 
+                     height=0.4\textheight, 
+                     keepaspectratio]{figures/Em.jpg}
+    \caption{Open-Circuit Voltage (OCV) vs. SOC}
+    \label{fig:4.2}
+\end{figure}
+
+\begin{figure}[htbp] 
+\centering \includegraphics[width=0.9\textwidth]{figures/R0.jpg} \caption{Ohmic Resistance ($R_o$) vs. SOC} \label{fig:4.3} 
+\end{figure}
+
+\begin{figure}[htbp] 
+\centering \includegraphics[width=0.9\textwidth]{figures/R1.jpg} \caption{Fast Polarization Resistance ($R_1$) vs. SOC} \label{fig:4.4} 
+\end{figure}
+
+
+
+% --- FIGURE PLACEHOLDER 3 (SUBFIGURES) ---
+
+\begin{figure}[htbp] 
+\centering \includegraphics[width=0.9\textwidth]{figures/R2.jpg} \caption{Slow Polarization Resistance ($R_2$) vs. SOC} \label{fig:4.5} 
+\end{figure}
+    \hfill
+
+    % Placeholder for C2.png
+
+  \begin{figure}[htbp] 
+\centering \includegraphics[width=0.9\textwidth]{figures/C1.jpg} \caption{Fast Polarization Capacitance ($C_1$) vs. SOC} \label{fig:4.6} 
+\end{figure}
+
+  \begin{figure}[htbp] 
+\centering \includegraphics[width=0.9\textwidth]{figures/C2.jpg} \caption{Slow Polarization Capacitance ($C_2$) vs. SOC} \label{fig:4.7} 
+\end{figure}
+
+\section{Analysis of Parameter Trends}
+
+
+
+An in-depth study of the plotting reveals the battery’s internal parameters’ highly nonlinearity which is the essential aspect of the work\cite{LiawModeling,ChoThermalECM}.
+
+
+
+\subsection{Ohmic Resistance ($R_o$)}
+
+According to Fig. 4.3, the ohmic resistance R0 is within the milli-ohm range; in particular, it varies between about 2.55 m$\Omega$ and 2.75 m$\Omega$. While SOC is clearly used, the exhibit. Shows a regular sawtooth pattern – not a simple linear or quadratic function. This part is for the instantaneous voltage drop which plays an important part in capturing the instantaneous response of the model to a current pulse.
+
+
+
+\subsection{Polarization Resistances ($R_1$ and $R_2$)}
+
+The polarization resistances R1 and R2 correspond to the charge transfer and the mass transport limitations in the cell. Both charts show a very strong non-linear dependence on stratagem.
+
+
+
+The primary conclusion drawn here is the steep and dramatic rise in both resistances at low state of charges (e.g. 20\% SOC). This is consistent with the known physics of batteries, which state that the electric potential to intercalate/de-intercalate lithium ions increases exponentially when the solid-state solid of the electrode has almost no lithium (such as during discharge). R1 and R2 also show complicated spiky behaviour for mid-SOC range indicating that these parameters cannot be represented by a simple mathematical equation.
+
+
+
+\subsection{Polarization Capacitances ($C_1$ and $C_2$)}
+
+C1 and C2 are the two capacitances which represent the capacitive effects of the double-layer and the diffusion processes.  These parameters show the most extreme non-linear behavior.
+
+
+
+The “fast” capacitance, C1, exceeds 2000 Farads at select SOC points (e.g., 0.2, 0.4, 0.8), but virtually vanishes at others; see figure 4.6 placeholder. The capacitance denoted as C2, which is a slow charge capacitance, similarly behaves like that of C1, whereby its value becomes larger, reaching the thousands of Farads range (remember the factor of 10$^4$ on the Y-axis in the original plot).
+
+
+
+The need for the HPPC test is highlighted by this erratic condition\cite{MathWorksHPPC}. The relationships between complex parameters which are captured in simple 2D lookup tables (Quality of Charge/SOC versus Temperature) make it possible for the Simulink model to predict the battery voltage response throughout the operating range.
+
+
+
+\section{Conclusion}
+
+The results of ECM parameter extraction were discussed in this chapter. The data were obtained from a documented experimental HPPC test performed on a BAK N18650CL-29 cell. The five second-order ECM parameters were extracted and plotted against the State-of-Charge ($R_o, R_1, C_1, R_2, C_2$).
+
+
+
+The main finding is that the five parameters are highly non-linear and complex functions of SOC. Therefore, the use of a lookup table approach within the data-driven framework is justified, as opposed to a simple empirical equation. The resulting parameter sets obtained at five different temperatures are at the core of the battery model to be implemented and validated in Matlab Simulink.
+
+
+
+The subsequent chapter will present the conclusion and some ideas for the future.

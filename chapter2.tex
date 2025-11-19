@@ -1,0 +1,70 @@
+\chapter{Review of Relevant Literature}
+
+%\pagenumbering{arabic}\hspace{3mm}
+
+This chapter explores the academic background pertinent to creating a hybrid Battery Thermal Management System (BTMS) and the necessary electro-thermal modeling concepts that underpin its successful development. The structure of this review first underscores why thermal control is non-negotiable by examining its impact on battery lifespan and safety. It then assesses the currently available BTMS configurations, providing the rationale for selecting a hybrid approach. Finally, it reviews the established literature on battery performance modeling, ultimately concluding that the Equivalent Circuit Model (ECM) is the most crucial tool for accurately predicting the heat loads that any robust BTMS must be designed to manage.
+
+\section{The Essential Need for Thermal Control: Endurance, Life, and Safety}
+
+The cell's energy storage capacity and its longevity are dramatically influenced by its operational temperature, which also dictates its overall reliability and performance. The basic chemical processes that enable a Li-ion cell to function are inherently temperature-dependent, meaning there is a narrow temperature window where the battery operates at its maximum potential. When batteries run too hot, even at temperatures not immediately hazardous, they trigger detrimental side reactions inside the cell. This phenomenon, termed "thermal aging," is the primary cause of irreversible damage, leading to a permanent reduction in available capacity and an increase in internal resistance.
+
+As demonstrated by Liaw et al. \cite{LiawModeling}, this deterioration is quantifiable as an increase in the cell's polarization resistance, establishing a direct link between the cell's heat history and its reduced operational life.
+
+The more immediate and terrifying danger is the threat of thermal runaway. This catastrophic failure mode involves an unstoppable, self-sustaining exothermic chain reaction that can result in the venting of toxic gases, fire, and explosion. The context of Electric Two-Wheelers (E2Ws) and Personal Mobility Devices (PMDs) significantly amplifies this danger. These platforms pair powerful, high-energy-density battery packs with extremely confined spaces, increasing the risk of heat propagation from cell-to-cell. Furthermore, E2Ws are particularly susceptible to physical triggers for thermal runaway, such as repeated vibration and impact damage from collisions or drops. The outcomes of such failures are tragic; analyses of E2W battery fires in residential settings show they can render a room "immediately fatal" to occupants and cause flashover conditions within mere seconds. This heightened danger has been tied to a documented 20-fold rise in severe burn injuries related to PMD-induced fires since 2016 \cite{SemcoBTMS}.
+
+\section{An Examination of BTMS Architectures}
+
+To effectively counteract these substantial risks, a dedicated BTMS is mandatory. Published research generally categorizes existing BTMS solutions into three main families: active, passive, and hybrid systems \cite{Rao2025ThermalReview, Anan2025HybridReview}.
+
+\subsection{Active Methods: Forced Air and Fluid}
+
+Active systems require external energy input to control temperature, typically through forced air circulation or liquid cooling. Air cooling is known for its simplicity, low initial cost, and light weight, making it a common choice for devices with lower power demands, including a large segment of the E2W market \cite{SemcoBTMS}. Nevertheless, its effectiveness is severely limited by the naturally low thermal conductivity and heat capacity of air. For battery packs demanding high energy output or facing strenuous use cases (such as frequent fast charging or aggressive acceleration), forced air often fails to deliver sufficient or uniform temperature regulation.
+
+Liquid cooling is the preferred solution for high-performance Electric Vehicles (EVs) because of its superior thermal management capabilities and its ability to maintain highly precise, even temperature distribution \cite{Rao2025ThermalReview}. Yet, these systems introduce serious disadvantages, particularly for the weight- and cost-sensitive E2W segment: high operational complexity, significant added mass and expense, parasitic power drain from circulating pumps, and the inherent risk of fluid leakage. These disadvantages render conventional liquid cooling largely inappropriate for the specific constraints of E2W applications.
+
+\subsection{Passive Methods: Phase Change Technology}
+
+Passive systems operate without consuming external power, relying instead on innate heat transfer processes. The most prominent passive technology involves the use of Phase Change Materials (PCMs). PCMs are substances that can absorb substantial amounts of latent heat at a nearly constant saturation temperature as they undergo a melting transition, making them suited for buffering short, intense thermal loads \cite{Li2023HybridPCM}.
+
+The main limitations of PCM-based systems are their finite thermal storage capacity and inherently low thermal conductivity. Once the PCM is completely liquefied, it ceases to be an effective thermal sink and paradoxically becomes a thermal insulator, impeding further heat dissipation. This limitation, combined with the material's necessary bulk and weight, means PCMs are seldom sufficient as a standalone solution for managing sustained thermal loads.
+
+\subsection{Hybrid Systems: Achieving Optimal Balance}
+
+Hybrid BTMS configurations have emerged as a highly promising path forward, as they strategically combine the strengths of both active and passive approaches to mitigate their individual weaknesses \cite{Anan2025HybridReview}. By integrating two or more thermal management techniques, a hybrid system can achieve performance that surpasses either standalone method while optimizing cost, weight, and energy efficiency.
+
+A common and highly relevant configuration the focus of this thesis—is the PCM air hybrid system \cite{Li2023HybridPCM}. In this design, the PCM absorbs sudden, high-intensity heat spikes, while a low-power forced-air fan manages long-term heat output and helps re-solidify the PCM during rest periods. This strategy provides robust thermal control without the expense and installation complexity associated with liquid cooling, making it an ideal candidate for E2W applications.
+
+\section{Predictive Modeling for Thermal Design}
+
+Selecting an optimal BTMS configuration is just the beginning. To properly engineer and size the chosen system, such as calculating PCM volume or fan flow rate—an accurate, predictive heat-generation model is essential. Without it, the final BTMS design remains speculative.
+
+\subsection{Equivalent Circuit Models (ECM) for Fast Analysis}
+
+Although detailed electrochemical models like the P2D model exist, their computational burden makes them unsuitable for real-time BMS applications \cite{ChoThermalECM}. For this reason, the literature overwhelmingly favors the Equivalent Circuit Model (ECM) approach, celebrated for its high computational speed and its ability to accurately capture a battery’s dynamic electrical behavior \cite{LiawModeling}.
+
+An ECM represents the complex electrochemical dynamics of the battery using a simplified network of standard electrical components. As detailed by Liaw et al.\cite{MathWorksHPPC} and illustrated in their Figure 4.2, a standard ECM comprises:
+\begin{enumerate}
+\item A voltage source that defines the Open-Circuit Voltage (OCV), which is directly dependent on the State of Charge (SOC) and characterizes the cell's underlying thermodynamic state.
+\item A series resistor ($R_0$ or $R_1$) that models the instantaneous, purely resistive ohmic resistance.
+\item One or more parallel Resistor-Capacitor (RC) pairs ($R_2C$), which are used to simulate the transient dynamic response of the cell, such as the kinetics of charge transfer and the diffusion rate of mass transport phenomena.
+\end{enumerate}
+This architecture is mathematically straightforward (requiring only the solution of simple first-order ordinary differential equations, ODEs) and is the foundation for virtually all BMS functions for estimating critical operational states like SOC and State of Health (SOH).\subsection{Integrating the Electro-Thermal Model}The utility of the ECM extends significantly beyond simple electrical estimation. By merging the electrical ECM with an energy balance equation, a complete "Thermal ECM" or "coupled electro-thermal model" is formed. This integrated approach enables the model to simultaneously simulate both the battery's voltage response and its resulting thermal behavior.The connection between the two sub-models is bidirectional. Initially, the parameters derived from the electrical ECM are used to compute the rate of heat produced by the battery. This computed heat rate is then used as the primary input for the thermal model, which determines the resulting cell temperature. This newly calculated temperature is subsequently "fed back" into the electrical model to appropriately update the ECM parameters (OCV, R, C), all of which exhibit strong dependencies on both SOC and temperature. This iterative process creates a highly accurate model capable of predicting thermal response under dynamic operational loads.\section{Determining Heat Output from ECM Parameters}The primary function of any accurate thermal model is to quantify the rate of heat generation. The literature, which often cites the foundational Bernardi equation, identifies two main origins of heat within a Li-ion cell: irreversible (Joule) heat and reversible (entropic) heat. Critically, both of these heat sources can be computed directly using the identified parameters of the ECM.
+\begin{enumerate}
+\item \textbf{Irreversible Heat ($Q_{irr}$):} Also widely known as Joule heat, this is the heat produced by the internal energy losses within the cell's internal resistances or overpotentials (including ohmic, charge transfer, and mass transfer losses). This component is always positive (i.e., always generates heat) and is calculated from the ECM parameters using the concept of overpotential:
+$$Q_{irr} = I \cdot (V_t - OCV)$$
+where '$I$' is the operating current, '$V_t$' is the measured terminal voltage, and '$OCV$' is the cell's open-circuit voltage.
+\item \textbf{Reversible Heat ($Q_{rev}$):} Also known as entropic heat, this is a thermodynamic phenomenon linked to the change in entropy ($\Delta S$) during the cell's underlying chemical reactions. This heat component can be either positive (exothermic, generating heat) or negative (endothermic, cooling the cell), depending on the current direction, temperature, and specific SOC of the cell. It is calculated directly from the OCV parameter:
+$$Q_{rev} = -I \cdot T \cdot \left(\frac{dOCV}{dT}\right)$$
+where '$T$' represents the absolute cell temperature and '($dOCV/dT$)' is the entropic heat coefficient, a value which must be determined experimentally as a function of SOC.
+\end{enumerate}
+Therefore, by precisely determining the ECM's components (OCV, $R_0$, $R_1$, $C_1$, etc.) and the associated entropic coefficient ($dOCV/dT$), the total heat generation ($Q_{total} = Q_{irr} + Q_{rev}$) can be predicted with high fidelity \cite{LiawModeling, ChoThermalECM}.
+
+\section{Establishing Parameters for Coupled Electro-Thermal Models}
+
+The final subject area reviewed involves the practical methodologies for identifying the ECM parameters. The critical parameters (OCV, the R and C values, and the entropic coefficient $dOCV/dT$) are not fixed values; they are intricate functions of both SOC and temperature. Consequently, a thorough and meticulous experimental characterization process is mandated.
+
+Standardized laboratory testing protocols, such as the Hybrid Pulse Power Characterization (HPPC) test, are utilized to gather the necessary data streams of voltage and current across a range of SOCs and temperatures \cite{MathWorksHPPC}. Dedicated tests are also required to map the OCV–SOC relationship and to accurately determine the entropic heat coefficient \cite{LiawModeling}.
+
+This collected experimental data then serves as the input for an optimization routine used to "fit" the ECM parameters. Advanced, heuristic search algorithms, notably Genetic Algorithms (GA) and Particle Swarm Optimization (PSO), are frequently cited as the most robust techniques for identifying the optimal set of parameter values that minimize the error between the model's computed output and the actual experimental data \cite{ChoThermalECM}.
+
+The two foundational papers referenced for this report are critical cornerstones of this review. The work by Liaw et al. \cite{LiawModeling} establishes the basic ECM framework, defining its constituent parts and its effectiveness in simulating long-term degradation, conclusively showing how degradation manifests as an increase in the model's resistance parameters. The subsequent work by Cho et al. \cite{ChoThermalECM} represents the modern state-of-the-art in the field. It provides a detailed account of building a complete “Thermal ECM” for a high-capacity cell, successfully integrating the core ECM with a robust energy balance model and introducing advanced corrections for high-current (C-rate) operation. Importantly, this work explicitly employs a Genetic Algorithm (GA) for the parameter identification process \cite{ChoThermalECM}, thereby validating the exact optimization methodology that constitutes the core of this thesis.
